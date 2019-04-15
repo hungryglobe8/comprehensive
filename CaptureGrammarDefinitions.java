@@ -1,5 +1,7 @@
 package comprehensive;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +13,10 @@ public class CaptureGrammarDefinitions {
 	private HashMap<String, ArrayList<String>> myMap;
 	private Scanner s;
 	
-	public CaptureGrammarDefinitions(FileReader f)
+	public CaptureGrammarDefinitions(File f, Scanner _s)
 	{
 		myMap = new LinkedHashMap<String, ArrayList<String>>();
-		s = new Scanner(f);
+		s = _s;
 		
 		while(s.hasNext())
 		{
@@ -41,7 +43,7 @@ public class CaptureGrammarDefinitions {
 	{
 		while(s.hasNextLine())
 		{
-			if(s.nextLine().contains("{"))
+			if(s.nextLine().equals("{"))
 			{
 				return s.next();
 			}
@@ -58,12 +60,19 @@ public class CaptureGrammarDefinitions {
 		}
 		ArrayList<String> sList = new ArrayList<String>();
 		
-		while (!s.nextLine().contains("}"))
+		//Skip space between non-terminal and phrases that can follow it.
+		s.nextLine();
+		String token = s.nextLine();
+		//Should we keep track of non-terminals within the line?
+		while (!token.equals("}"))
 		{
-			sList.add(s.next());
+			sList.add(token);
+			token = s.nextLine();
 		}
 		
 		myMap.put(key, sList);
 		return;
 	}
+	
+	//StringBuilder StringBuffer for random generation of strings.
 }

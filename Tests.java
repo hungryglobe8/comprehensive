@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,17 +36,11 @@ class Tests {
 	}
 
 	@Test
-	void testFile() {
-		FileReader f;
-		try {
-			f = new FileReader("//CS 2420//src//comprehensive//excuse");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		}
-		
-		CaptureGrammarDefinitions sut = new CaptureGrammarDefinitions(f);
+	void testFile() throws FileNotFoundException {
+		File f;
+		f = new File("./excuse.txt");
+		Scanner s = new Scanner(f);
+		CaptureGrammarDefinitions sut = new CaptureGrammarDefinitions(f, s);
 		sut.getArrayList("<plea>");
 	}
 }
