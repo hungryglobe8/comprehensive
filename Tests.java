@@ -43,4 +43,13 @@ class Tests {
 		CaptureGrammarDefinitions sut = new CaptureGrammarDefinitions(f, s);
 		sut.getArrayList("<plea>");
 	}
+	
+	@Test
+	void testMain()
+	{
+		String[] args = new String[2];
+		args[0] = "./excuse.txt";
+		args[1] = "5";
+		RandomPhraseGenerator.main(args);
+	}
 }

@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Random;
 import java.util.Scanner;
 
 public class CaptureGrammarDefinitions {
@@ -32,6 +33,16 @@ public class CaptureGrammarDefinitions {
 	public ArrayList<String> getArrayList(String key)
 	{
 		return myMap.get(key);
+	}
+	
+	/**
+	 * Returns a random line from the ArrayList associated with a specific key.
+	 */
+	public String randomLine(String key)
+	{
+		Random rng = new Random();
+		ArrayList<String> sList = myMap.get(key);
+		return sList.get(rng.nextInt(sList.size()));
 	}
 	
 	/**
