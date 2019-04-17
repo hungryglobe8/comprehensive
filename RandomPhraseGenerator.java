@@ -1,10 +1,11 @@
 package comprehensive;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * 
@@ -13,6 +14,8 @@ import java.util.Scanner;
  */
 public class RandomPhraseGenerator {
 	
+	public static StringBuilder s;
+	public static CaptureGrammarDefinitions rulesList;
 
 	/**
 	 * First argument should include fileName containing grammar rules.
@@ -25,25 +28,47 @@ public class RandomPhraseGenerator {
 		{
 			throw new IllegalArgumentException("Args should include a file name followed by an integer.");
 		}
-		
-		File f;
-		Scanner s;
+
+		String fileName = args[0];
+		BufferedReader in;
 		try {
-			s = new Scanner(f = new File(args[0]));
+			in = new BufferedReader(new FileReader(fileName));
+			rulesList = new CaptureGrammarDefinitions(in);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			return;
+		} catch (IOException e) {
 			return;
 		}
 		
-		CaptureGrammarDefinitions rulesList = new CaptureGrammarDefinitions(f, s);
 		
 		Integer num = Integer.parseInt(args[1]);
-		//Generate phrases
+		//OutputStrem
+//		OutputStream out = new BufferedOutputStream(System.out);
+//		for(int i = 0; i < num; i++)
+//		{
+//			try {
+//				out.write((generatePhrase() + "\n").getBytes());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
+		//System.out
+//		for(int i = 0; i < num; i++)
+//		{
+//			System.out.print(generatePhrase() + "\n");
+//		}
+		
+		//BufferedWriter - I think this is fastest
+		BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
 		for(int i = 0; i < num; i++)
 		{
-			System.out.println(generatePhrase(rulesList));
+			try {
+				log.write(generatePhrase() + "\n");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return;
 	}
 	
 	/**
@@ -51,39 +76,53 @@ public class RandomPhraseGenerator {
 	 * @param num
 	 * @return
 	 */
-	private static String generatePhrase(CaptureGrammarDefinitions rulesList)
+	private static StringBuilder generatePhrase()
 	{
-		StringBuilder s = new StringBuilder();
-		String startLine = rulesList.randomLine("<start>");
-		
-		s.append(startLine);
-		generateWords(s, startLine, rulesList);
-		
-		return s.toString();
+		s = new StringBuilder(rulesList.randomLine("<start>"));	
+		generateWords(s);
+
+		return s;
 	}
+
 	
-	private static void generateWords(StringBuilder s, String currLine, CaptureGrammarDefinitions rulesList)
+	private static void generateWords(StringBuilder currLine)
 	{
-		if (!s.toString().contains("<"))
+		int i = 0;
+		while(i < currLine.length())
 		{
-			return;
-		}
-		
-		else
-		{
-			int startIndex = s.indexOf("<");
-			int endIndex = s.indexOf(">", startIndex);
-			String key = s.substring(startIndex, endIndex + 1);
-			
-			String newLine = rulesList.randomLine(key);
-			
-			if(newLine.contains("<"))
+			if (currLine.charAt(i) == '<')
 			{
-				//run on here 
+				int closeBrace = currLine.indexOf(">", i);
+				String key = currLine.substring(i, closeBrace + 1);
+				String newLine = rulesList.randomLine(key);
+				
+				currLine.delete(i, closeBrace + 1);
+				currLine.insert(i, newLine);
+				i--;
 			}
 			
-			s.replace(startIndex, endIndex + 1, newLine);
-			generateWords(s, newLine, rulesList);
+			i++;
 		}
+//		//base case, no more "<"
+//		int openBrace = currLine.indexOf("<"); 
+//
+//		if(openBrace == -1)
+//		{
+//			s.append(currLine); 
+//			return; 
+//		}
+//		
+//		int closeBrace = currLine.indexOf(">"); 
+//		
+//		String beginning = currLine.substring(0, openBrace); 
+//		String key = currLine.substring(openBrace, closeBrace + 1); 
+//		String following = currLine.substring(closeBrace + 1, currLine.length()); 
+//		String replacement = rulesList.randomLine(key);
+//		
+////		currLine = beginning.concat(replacement).concat(following);
+////		generateWords(currLine);
+//		generateWords(beginning);
+//		generateWords(replacement); 
+//		generateWords(following); 	
 	}
 }

@@ -17,31 +17,14 @@ import org.junit.jupiter.api.Test;
 class Tests {
 	
 	List<String> sList = new ArrayList<String>();
-	
-	/**
-	 * This method constructs integer lists to test with.
-	 * @param size
-	 * @return result integer ArrayList
-	 */
-	public List<Integer> integerList(int size)
-	{
-		Random rng = new Random(5);
-		List<Integer> result = new ArrayList<Integer>();
-		
-		for(int i = 0; i < size; i++)
-		{
-			result.add(rng.nextInt(100));
-		}
-		return result;		
-	}
 
 	@Test
 	void testFile() throws FileNotFoundException {
-		File f;
-		f = new File("./excuse.txt");
-		Scanner s = new Scanner(f);
-		CaptureGrammarDefinitions sut = new CaptureGrammarDefinitions(f, s);
-		sut.getArrayList("<plea>");
+//		File f;
+//		f = new File("./excuse.txt");
+//		Scanner s = new Scanner(f);
+//		CaptureGrammarDefinitions sut = new CaptureGrammarDefinitions();
+//		sut.getArrayList("<plea>");
 	}
 	
 	@Test
@@ -49,7 +32,7 @@ class Tests {
 	{
 		String[] args = new String[2];
 		args[0] = "./excuse.txt";
-		args[1] = "5";
+		args[1] = "1000";
 		RandomPhraseGenerator.main(args);
 	}
 }

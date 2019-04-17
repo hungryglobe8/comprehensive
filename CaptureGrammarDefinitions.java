@@ -1,8 +1,8 @@
 package comprehensive;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -12,19 +12,27 @@ import java.util.Scanner;
 public class CaptureGrammarDefinitions {
 
 	private HashMap<String, ArrayList<String>> myMap;
-	private Scanner s;
-	
-	public CaptureGrammarDefinitions(File f, Scanner _s)
+	private BufferedReader reader; 
+
+	public CaptureGrammarDefinitions(BufferedReader _reader) throws IOException
 	{
+		reader = _reader;
 		myMap = new LinkedHashMap<String, ArrayList<String>>();
-		s = _s;
-		
-		while(s.hasNext())
+
+		//		String newLine;
+		while(true)
 		{
-			String key = findNextNonTerminal();
-			addImportantStrings(key);
+			//If a non-terminal is found, then the strings following it will be added.
+			if(findNextNonTerminal())
+			{
+				//Keys and the value associated with them are added to myMap in this method.
+				addImportantStrings();
+			}
+			//Nothing else found in file.
+			else
+				break;
 		}
-		s.close();
+		reader.close();
 	}
 	
 	/**
@@ -47,43 +55,39 @@ public class CaptureGrammarDefinitions {
 	
 	/**
 	 * This method ignores lines between non-terminal definitions and captures the next non-terminal found.
+	 * @param newLine 
 	 * @return 
+	 * @throws IOException 
 	 * 
 	 */
-	private String findNextNonTerminal()
+	private boolean findNextNonTerminal() throws IOException
 	{
-		while(s.hasNextLine())
+		String newLine;
+		while((newLine = reader.readLine()) != null)
 		{
-			if(s.nextLine().equals("{"))
+			if(newLine.equals("{"))
 			{
-				return s.next();
+				return true; 
 			}
 		}
-		
-		return null;
-		}
+		return false;
+	}
 	
-	private void addImportantStrings(String key)
+	private void addImportantStrings() throws IOException
 	{
-		if(key == null)
-		{
-			return;
-		}
 		ArrayList<String> sList = new ArrayList<String>();
 		
-		//Skip space between non-terminal and phrases that can follow it.
-		s.nextLine();
-		String token = s.nextLine();
+		//Save the non-terminal that will be used as a key in the HashMap.
+		String key = reader.readLine();
+	
+		String token;
 		//Should we keep track of non-terminals within the line?
-		while (!token.equals("}"))
+		while (!(token = reader.readLine()).equals("}"))
 		{
 			sList.add(token);
-			token = s.nextLine();
 		}
 		
 		myMap.put(key, sList);
 		return;
 	}
-	
-	//StringBuilder StringBuffer for random generation of strings.
 }
