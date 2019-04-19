@@ -32,7 +32,8 @@ class Tests {
 	{
 		String[] args = new String[2];
 		args[0] = "./excuse.txt";
-		args[1] = "1000";
+		args[1] = "10";
+
 		RandomPhraseGenerator.main(args);
 	}
 }

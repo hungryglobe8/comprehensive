@@ -13,13 +13,14 @@ public class CaptureGrammarDefinitions {
 
 	private HashMap<String, ArrayList<String>> myMap;
 	private BufferedReader reader; 
+	private Random rng;
 
 	public CaptureGrammarDefinitions(BufferedReader _reader) throws IOException
 	{
 		reader = _reader;
 		myMap = new LinkedHashMap<String, ArrayList<String>>();
-
-		//		String newLine;
+		rng = new Random();
+		
 		while(true)
 		{
 			//If a non-terminal is found, then the strings following it will be added.
@@ -48,7 +49,6 @@ public class CaptureGrammarDefinitions {
 	 */
 	public String randomLine(String key)
 	{
-		Random rng = new Random();
 		ArrayList<String> sList = myMap.get(key);
 		return sList.get(rng.nextInt(sList.size()));
 	}

@@ -42,33 +42,21 @@ public class RandomPhraseGenerator {
 		
 		
 		Integer num = Integer.parseInt(args[1]);
-		//OutputStrem
-//		OutputStream out = new BufferedOutputStream(System.out);
+
+		for(int i = 0; i < num; i++)
+		{
+			System.out.print(generatePhrase() + "\n");
+		}
+		//BufferedWriter - I think this is fastest
+//		BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
 //		for(int i = 0; i < num; i++)
 //		{
 //			try {
-//				out.write((generatePhrase() + "\n").getBytes());
+//				log.write(generatePhrase() + "\n");
 //			} catch (IOException e) {
 //				e.printStackTrace();
 //			}
 //		}
-		
-		//System.out
-//		for(int i = 0; i < num; i++)
-//		{
-//			System.out.print(generatePhrase() + "\n");
-//		}
-		
-		//BufferedWriter - I think this is fastest
-		BufferedWriter log = new BufferedWriter(new OutputStreamWriter(System.out));
-		for(int i = 0; i < num; i++)
-		{
-			try {
-				log.write(generatePhrase() + "\n");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	/**
@@ -76,53 +64,36 @@ public class RandomPhraseGenerator {
 	 * @param num
 	 * @return
 	 */
-	private static StringBuilder generatePhrase()
+	private static String generatePhrase()
 	{
-		s = new StringBuilder(rulesList.randomLine("<start>"));	
-		generateWords(s);
-
-		return s;
+		s = new StringBuilder();	
+		generateWords(rulesList.randomLine("<start>"));
+		return s.toString();
 	}
 
 	
-	private static void generateWords(StringBuilder currLine)
+	private static void generateWords(String currLine)
 	{
 		int i = 0;
 		while(i < currLine.length())
 		{
-			if (currLine.charAt(i) == '<')
+			char newChar = currLine.charAt(i);
+			if (newChar == '<')
 			{
 				int closeBrace = currLine.indexOf(">", i);
 				String key = currLine.substring(i, closeBrace + 1);
 				String newLine = rulesList.randomLine(key);
 				
-				currLine.delete(i, closeBrace + 1);
-				currLine.insert(i, newLine);
-				i--;
+				generateWords(newLine);
+				
+				i += key.length() - 1;
 			}
-			
+			else 
+			{
+				s.append(newChar);
+			}
 			i++;
-		}
-//		//base case, no more "<"
-//		int openBrace = currLine.indexOf("<"); 
-//
-//		if(openBrace == -1)
-//		{
-//			s.append(currLine); 
-//			return; 
-//		}
-//		
-//		int closeBrace = currLine.indexOf(">"); 
-//		
-//		String beginning = currLine.substring(0, openBrace); 
-//		String key = currLine.substring(openBrace, closeBrace + 1); 
-//		String following = currLine.substring(closeBrace + 1, currLine.length()); 
-//		String replacement = rulesList.randomLine(key);
-//		
-////		currLine = beginning.concat(replacement).concat(following);
-////		generateWords(currLine);
-//		generateWords(beginning);
-//		generateWords(replacement); 
-//		generateWords(following); 	
+		}	
+		return;
 	}
 }
