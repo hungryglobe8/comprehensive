@@ -8,6 +8,11 @@ public class CompTimer {
 	/**
 	 * Running times while increasing the number of phrases generated, for the same medium-sized input grammar.
 	 */
+	public static void main (String[] args) {
+		testNumberOfPhrases(); 
+		
+	}
+
 	
 	private static String testNumberOfPhrases()
 	{		
@@ -46,6 +51,9 @@ public class CompTimer {
 		// Average it over the number of runs.
 		double averageTime = (double) ((midpointTime - startTime) - (stopTime - midpointTime))
 				/ (TIMES_TO_LOOP);
+		System.out.println("Time " + averageTime);
 		return averageTime + "";
+		
+		
 	}
 }
